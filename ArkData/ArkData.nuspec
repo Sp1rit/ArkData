@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>ArkData</id>
+        <version>$version$</version>
+        <title>ArkData</title>
+        <authors>Phillip Brand</authors>
+        <licenseUrl>https://www.gnu.org/licenses/gpl-3.0.en.html</licenseUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>Provides easy methods to parse server files of ARK: Survival Evolved.</description>
+    </metadata>
+    <files>
+        <file src="bin\Release\ArkData.dll" target="lib\net452\ArkData.dll" />
+    </files>
+</package>
