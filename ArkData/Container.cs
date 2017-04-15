@@ -37,7 +37,7 @@ namespace ArkData
         public IEnumerable<ITribe> Tribes => tribes;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Container"/> class.
+        /// Initializes a new instance of the <see cref="Container" /> class.
         /// </summary>
         /// <param name="playerParser">The player parser.</param>
         /// <param name="tribeParser">The tribe parser.</param>
@@ -59,11 +59,9 @@ namespace ArkData
         /// </summary>
         /// <param name="players">The players.</param>
         /// <param name="tribes">The tribes.</param>
-        /// <exception cref="ArgumentNullException">
-        /// players
+        /// <exception cref="System.ArgumentNullException">players
         /// or
-        /// tribes
-        /// </exception>
+        /// tribes</exception>
         public void SetData(IEnumerable<IPlayer> players, IEnumerable<ITribe> tribes)
         {
             if (players == null)
@@ -84,8 +82,8 @@ namespace ArkData
         /// </summary>
         /// <param name="directory">The directory.</param>
         /// <param name="linkPlayerTribes">if set to <c>true</c> [link player tribes].</param>
-        /// <exception cref="DirectoryNotFoundException">The provided directory doesn't exist.</exception>
-        /// <exception cref="FileLoadException"></exception>
+        /// <exception cref="System.IO.DirectoryNotFoundException">The provided directory doesn't exist.</exception>
+        /// <exception cref="System.IO.FileLoadException"></exception>
         public void LoadDirectory(string directory, bool linkPlayerTribes = true)
         {
             if (!Directory.Exists(directory))
@@ -115,8 +113,8 @@ namespace ArkData
         /// <param name="directory">The directory.</param>
         /// <param name="linkPlayerTribes">if set to <c>true</c> [link player tribes].</param>
         /// <returns></returns>
-        /// <exception cref="DirectoryNotFoundException">The provided directory doesn't exist.</exception>
-        /// <exception cref="FileLoadException"></exception>
+        /// <exception cref="System.IO.DirectoryNotFoundException">The provided directory doesn't exist.</exception>
+        /// <exception cref="System.IO.FileLoadException"></exception>
         public async Task LoadDirectoryAsync(string directory, bool linkPlayerTribes = true)
         {
             if (!Directory.Exists(directory))
@@ -164,11 +162,14 @@ namespace ArkData
         /// Loads the steam data.
         /// </summary>
         /// <param name="apiKey">The API key.</param>
-        /// <exception cref="ArgumentNullException">apiKey</exception>
+        /// <exception cref="System.ArgumentNullException">apiKey</exception>
+        /// <exception cref="System.InvalidOperationException">Container needs to be initialized with steamApi to fetch steam data.</exception>
         public void LoadSteamData(string apiKey)
         {
             if (string.IsNullOrEmpty(apiKey))
                 throw new ArgumentNullException(nameof(apiKey));
+            if (steamApi == null)
+                throw new InvalidOperationException("Container needs to be initialized with steamApi to fetch steam data.");
 
             steamApi.ApiKey = apiKey;
 
@@ -184,11 +185,14 @@ namespace ArkData
         /// </summary>
         /// <param name="apiKey">The API key.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">apiKey</exception>
+        /// <exception cref="System.ArgumentNullException">apiKey</exception>
+        /// <exception cref="System.InvalidOperationException">Container needs to be initialized with steamApi to fetch steam data.</exception>
         public async Task LoadSteamDataAsync(string apiKey)
         {
             if (string.IsNullOrEmpty(apiKey))
                 throw new ArgumentNullException(nameof(apiKey));
+            if (steamApi == null)
+                throw new InvalidOperationException("Container needs to be initialized with steamApi to fetch steam data.");
 
             steamApi.ApiKey = apiKey;
 
@@ -212,8 +216,12 @@ namespace ArkData
         /// Loads the online players.
         /// </summary>
         /// <param name="server">The server.</param>
+        /// <exception cref="System.InvalidOperationException">Container needs to be initialized with steamServer to fetch online players.</exception>
         public void LoadOnlinePlayers(IPEndPoint server)
         {
+            if (steamServer == null)
+                throw new InvalidOperationException("Container needs to be initialized with steamServer to fetch online players.");
+
             var groupedPlayers = players.GroupBy(p => p.SteamName.Length > 16 ? p.SteamName.Substring(0, 16) : p.SteamName);
             var names = steamServer.GetOnlinePlayerNames(server).Select(n => n.Length > 16 ? n.Substring(0, 16) : n).ToList();
 
@@ -230,9 +238,22 @@ namespace ArkData
         /// </summary>
         /// <param name="server">The server.</param>
         /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">Container needs to be initialized with steamServer to fetch online players.</exception>
         public Task LoadOnlinePlayersAsync(IPEndPoint server)
         {
+            if (steamServer == null)
+                throw new InvalidOperationException("Container needs to be initialized with steamServer to fetch online players.");
+
             return Task.Run(() => LoadOnlinePlayers(server));
+        }
+
+        /// <summary>
+        /// Creates a new container.
+        /// </summary>
+        /// <returns></returns>
+        public static Container Create()
+        {
+            return new Container(new PlayerFileParser(), new TribeFileParser(), new SteamApi(), new SteamServer());
         }
     }
 }

@@ -10,6 +10,9 @@
         <description>Provides easy methods to parse server files of ARK: Survival Evolved.</description>
     </metadata>
     <files>
-        <file src="bin\Release\ArkData.dll" target="lib\net452\ArkData.dll" />
+        <file src="ArkData\bin\Release\ArkData.dll" target="lib\net452\ArkData.dll" />
+        <file src="ArkData\bin\Release\ArkData.xml" target="lib\net452\ArkData.xml" />
+        <file src="ArkData\bin\Release\ArkData.pdb" target="lib\net452\ArkData.pdb" />
+        <file src="**\*.cs" target="src" />
     </files>
 </package>

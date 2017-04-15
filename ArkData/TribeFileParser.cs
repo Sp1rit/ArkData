@@ -21,7 +21,7 @@ namespace ArkData
         /// <exception cref="FileNotFoundException">The provided file doesn't exist.</exception>
         public ITribe Parse(string filePath)
         {
-            FileInfo fileInfo = new FileInfo(filePath);
+            var fileInfo = new FileInfo(filePath);
             if (!fileInfo.Exists)
                 throw new FileNotFoundException("The provided file doesn't exist.", filePath);
 

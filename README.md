@@ -2,9 +2,19 @@
 I created this library to use for my new version of the ARK Player & Tribe Viewer. It is an easy way to parse player & tribe files from ARK: Survival Evolved to extract information of you users that RCON tools can't provide.
 
 While I plan to add more fields to be read out, there are some things that can't be parsed easily. An example are the tamed dinos which are saved in the world file.
+## NuGet
+https://www.nuget.org/packages/ArkData/
+```
+Install-Package ArkData
+```
 
 ## Usage
-Create a new container
+Simple creation of a new container
+```
+var container = Container.Create();
+```
+
+Advanced creation by providing dependencies. This allows you to provide custom parsers.
 ```csharp
 var playerParser = new PlayerFileParser();
 var tribeParser = new TribeFileParser();
@@ -42,4 +52,33 @@ var container = new Container(playerParser, tribeParser, steamApi, steamServer);
 await container.LoadDirectoryAsync("C:\\ArkDataFiles");
 await container.LoadSteamData("SteamAPIKey");
 await container.LoadOnlinePlayers(ip, 27015);
+```
+
+## Putting it together
+```csharp
+// Initialize shared dependencies
+var playerParser = new PlayerFileParser();
+var tribeParser = new TribeFileParser();
+var steamApi = new SteamApi();
+var steamServer = new SteamServer();
+
+// Define server endpoints
+var publicServer = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 27015);
+var privateServer = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 27015);
+
+// Public server
+var container1 = new Container(playerParser, tribeParser, steamApi, steamServer);
+await container1.LoadDirectoryAsync("C:\Server1\SaveData");
+await container1.LoadSteamData("MY-STEAM-KEY");
+await container1.LoadOnlinePlayers(publicServer);
+
+var onlinePlayers = container1.Players.Where(p => p.Online);
+
+// Private server
+// Don't need steam ban information for private server so don't provide steam api
+var privateConainer = new Container(playerParser, tribeParser, null, steamServer);
+await privateConainer.LoadDirectoryAsync("C:\PrivateServer\SaveData");
+await privateContainer.LoadOnlinePlayers(privateServer);
+
+var averageLevel = privateContainer.Players.Average(p => p.Level);
 ```

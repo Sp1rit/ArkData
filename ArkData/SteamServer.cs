@@ -48,12 +48,12 @@ namespace ArkData
                 return null;
 
             byte numPlayers = buffer[i++];
-            List<string> players = new List<string>();
+            var players = new List<string>();
             for (int j = 0; j < numPlayers; j++)
             {
                 i++;
 
-                List<byte> playerName = new List<byte>();
+                var playerName = new List<byte>();
                 while (buffer[i] != 0x00)
                     playerName.Add(buffer[i++]);
                 string name = Encoding.UTF8.GetString(playerName.ToArray());
@@ -71,7 +71,7 @@ namespace ArkData
             int count;
             byte[] responsePacket;
             EndPoint refEndpoint = server;
-            using (Socket srvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+            using (var srvSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
             {
                 srvSocket.SendTimeout = 3000;
                 srvSocket.ReceiveTimeout = 3000;

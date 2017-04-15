@@ -155,11 +155,11 @@ namespace ArkData
 
         private TResponse Deserialize<TResponse>(string result)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TResponse));
+            var serializer = new DataContractJsonSerializer(typeof(TResponse));
 
             TResponse response;
             byte[] resultData = Encoding.UTF8.GetBytes(result);
-            using (MemoryStream ms = new MemoryStream(resultData))
+            using (var ms = new MemoryStream(resultData))
                 response = (TResponse)serializer.ReadObject(ms);
 
             return response;
