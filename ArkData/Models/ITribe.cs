@@ -8,18 +8,18 @@ namespace ArkData
     /// </summary>
     public interface ITribe
     {
+        int Id { get; set; }
+
+        string Name { get; set; }
+
+        uint OwnerId { get; set; }
+
         DateTime FileCreated { get; set; }
 
         DateTime FileUpdated { get; set; }
 
-        int Id { get; set; }
-
-        ICollection<IPlayer> Members { get; set; }
-
-        string Name { get; set; }
-
         IPlayer Owner { get; set; }
 
-        uint OwnerId { get; set; }
+        ICollection<IPlayer> Members { get; set; }
     }
 }

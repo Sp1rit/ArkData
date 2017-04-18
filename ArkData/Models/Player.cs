@@ -30,6 +30,15 @@ namespace ArkData
         public ushort Level { get; set; }
 
         [DataMember]
+        public float ExperiencePoints { get; set; }
+
+        [DataMember]
+        public int TotalEngramPoints { get; set; }
+
+        [DataMember]
+        public bool FirstSpawned { get; set; }
+
+        [DataMember]
         public ISteamPlayerBanInfo BanInfo { get; set; }
 
         [DataMember]

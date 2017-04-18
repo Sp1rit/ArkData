@@ -58,5 +58,33 @@ namespace ArkData
 
             return string.Empty;
         }
+
+        public static float GetFloat(byte[] data, string name)
+        {
+            byte[] nameBytes = Encoding.Default.GetBytes(name);
+            byte[] floatProperty = Encoding.Default.GetBytes("FloatProperty");
+
+            int namePos = data.LocateFirst(nameBytes);
+            int floatPropertyPos = data.LocateFirst(floatProperty, namePos);
+
+            if (floatPropertyPos > -1)
+                return BitConverter.ToSingle(data, floatPropertyPos + floatProperty.Length + 9);
+
+            return 0.0f;
+        }
+
+        public static bool GetBool(byte[] data, string name)
+        {
+            byte[] nameBytes = Encoding.Default.GetBytes(name);
+            byte[] boolProperty = Encoding.Default.GetBytes("BoolProperty");
+
+            int namePos = data.LocateFirst(nameBytes);
+            int boolPropertyPos = data.LocateFirst(boolProperty, namePos);
+
+            if (boolPropertyPos > -1)
+                return BitConverter.ToBoolean(data, boolPropertyPos + boolProperty.Length + 9);
+
+            return false;
+        }
     }
 }

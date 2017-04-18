@@ -48,7 +48,7 @@ namespace ArkData
             return Task.Run(() => Parse(filePath));
         }
 
-        private static uint GetOwnerId(byte[] data)
+        private uint GetOwnerId(byte[] data)
         {
             byte[] id = Encoding.Default.GetBytes("OwnerPlayerDataID");
             byte[] intProperty = Encoding.Default.GetBytes("UInt32Property");

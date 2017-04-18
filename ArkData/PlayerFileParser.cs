@@ -21,7 +21,7 @@ namespace ArkData
         /// <exception cref="FileNotFoundException">The provided file doesn't exist.</exception>
         public IPlayer Parse(string filePath)
         {
-            FileInfo fileInfo = new FileInfo(filePath);
+            var fileInfo = new FileInfo(filePath);
             if (!fileInfo.Exists)
                 throw new FileNotFoundException("The provided file doesn't exist.", filePath);
 
@@ -35,6 +35,9 @@ namespace ArkData
                 CharacterName = BinaryHelper.GetString(data, "PlayerCharacterName"),
                 TribeId = BinaryHelper.GetInt(data, "TribeID"),
                 Level = BinaryHelper.GetUInt16(data, "CharacterStatusComponent_ExtraCharacterLevel"),
+                ExperiencePoints = BinaryHelper.GetFloat(data, "CharacterStatusComponent_ExperiencePoints"),
+                TotalEngramPoints = BinaryHelper.GetInt(data, "PlayerState_TotalEngramPoints"),
+                FirstSpawned = BinaryHelper.GetBool(data, "FirstSpawned"),
 
                 FileCreated = fileInfo.CreationTime,
                 FileUpdated = fileInfo.LastWriteTime
@@ -51,7 +54,7 @@ namespace ArkData
             return Task.Run((() => Parse(filePath)));
         }
 
-        private static ulong GetId(byte[] data)
+        private ulong GetId(byte[] data)
         {
             byte[] id = Encoding.Default.GetBytes("PlayerDataID");
             byte[] intProperty = Encoding.Default.GetBytes("UInt64Property");
@@ -62,7 +65,7 @@ namespace ArkData
             return BitConverter.ToUInt64(data, intPropertyPos + intProperty.Length + 9);
         }
 
-        private static string GetSteamId(byte[] data)
+        private string GetSteamId(byte[] data)
         {
             byte[] steamName = Encoding.Default.GetBytes("UniqueNetIdRepl");
             int steamNamePos = data.LocateFirst(steamName, 0);
